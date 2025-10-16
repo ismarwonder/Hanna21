@@ -350,6 +350,37 @@
             transform: translateY(0);
         }
 
+        /* Auto-animate cards on scroll */
+        .premium-card.card-animated::after {
+            animation: cardGlow 2s ease-in-out;
+        }
+
+        @keyframes cardGlow {
+            0% { opacity: 0; }
+            30% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .premium-card.card-animated {
+            animation: cardReveal 0.8s ease-out;
+        }
+
+        @keyframes cardReveal {
+            0% { 
+                transform: translateY(80px) scale(0.95);
+                box-shadow: 0 10px 30px rgba(147, 51, 234, 0.1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 35px 70px rgba(147, 51, 234, 0.4);
+            }
+            100% { 
+                transform: translateY(0) scale(1);
+                box-shadow: 0 20px 40px rgba(147, 51, 234, 0.2);
+            }
+        }
+
         .premium-card::before {
             content: '';
             position: absolute;
@@ -1425,14 +1456,60 @@
             observer.observe(el);
         });
 
-        // Card Interactions
+        // Card Interactions - Different behavior for mobile vs desktop
         const cards = document.querySelectorAll('.premium-card');
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-                createSparkles(card);
-                spawnHearts(5);
-            });
-        });
+        const isMobile = window.matchMedia('(max-width: 768px)');
+
+        function setupCardInteractions() {
+            if (isMobile.matches) {
+                // MOBILE: Auto-trigger on scroll into view
+                const cardObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting && !entry.target.classList.contains('card-animated')) {
+                            entry.target.classList.add('card-animated');
+                            // Stagger the effects for each card
+                            setTimeout(() => {
+                                createSparkles(entry.target);
+                                spawnHearts(5);
+                            }, index * 300); // 300ms delay between each card
+                        }
+                    });
+                }, {
+                    threshold: 0.5,
+                    rootMargin: '0px'
+                });
+
+                cards.forEach(card => {
+                    cardObserver.observe(card);
+                });
+            } else {
+                // DESKTOP: Hover-triggered effects
+                cards.forEach(card => {
+                    let hasTriggered = false;
+                    
+                    card.addEventListener('mouseenter', () => {
+                        if (!hasTriggered) {
+                            card.classList.add('card-animated');
+                            createSparkles(card);
+                            spawnHearts(5);
+                            hasTriggered = true;
+                            
+                            // Reset after animation
+                            setTimeout(() => {
+                                card.classList.remove('card-animated');
+                                hasTriggered = false;
+                            }, 2000);
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize
+        setupCardInteractions();
+
+        // Re-setup on resize (if switching between mobile/desktop)
+        isMobile.addEventListener('change', setupCardInteractions);
 
         function createSparkles(element) {
             const rect = element.getBoundingClientRect();
