@@ -1165,18 +1165,18 @@
         <div class="cards-grid">
             <div class="premium-card" data-scroll>
                 <div class="card-icon">🎉</div>
-                <h3 class="card-title">21 År av Magi</h3>
-                <p class="card-text">Äntligen 21! En helt ny värld av möjligheter öppnar sig framför dig. Detta är början på något extraordinärt - ett kapitel fyllt av äventyr, drömmar och oändliga möjligheter.</p>
+                <h3 class="card-title">Äntligen 21! 🥳</h3>
+                <p class="card-text">Nu är det officiellt - du kan göra ALLT! Välkommen till vuxenlivet där allt är möjligt. Dags att ta över världen, sista! 💪✨</p>
             </div>
             <div class="premium-card" data-scroll>
                 <div class="card-icon">💖</div>
-                <h3 class="card-title">Världens Bästa Syster</h3>
-                <p class="card-text">Du är inte bara en fantastisk syster - du är en inspirerande, stark och underbar människa som gör världen bättre varje dag. Din närvaro lyser upp allt omkring dig.</p>
+                <h3 class="card-title">Najjači Sestra</h3>
+                <p class="card-text">Seriöst, ingen gör det som du! Du är stark, vacker och har ett hjärta av guld. Så jävla stolt över att vara din bror! Volim te! 😘</p>
             </div>
             <div class="premium-card" data-scroll>
                 <div class="card-icon">🌟</div>
-                <h3 class="card-title">Framtiden Väntar</h3>
-                <p class="card-text">Framtiden tillhör dig! Må detta år vara fyllt med spännande äventyr, oväntade glädjeämnen, och all den kärlek och lycka du så väl förtjänar.</p>
+                <h3 class="card-title">Ditt År, Dina Regler</h3>
+                <p class="card-text">Detta året kommer bli SICK! Nya äventyr, nya minnen, och massor av kärlek. Du förtjänar allt och mer därtill. Ajde, slavimo! 🎊</p>
             </div>
         </div>
     </section>
@@ -1670,16 +1670,22 @@
             });
         }
 
-        // Confetti Cannon Button
+        // Confetti Cannon Button - Touch & Click support
         const confettiCannon = document.getElementById('confetti-cannon');
-        confettiCannon.addEventListener('click', () => {
+        
+        function triggerConfetti(e) {
+            e.preventDefault(); // Prevent double firing
             createMassiveFireworks();
             spawnHearts(30);
             confettiCannon.style.animation = 'none';
             setTimeout(() => {
                 confettiCannon.style.animation = 'pulse 2s ease-in-out infinite';
             }, 100);
-        });
+        }
+        
+        // Support both touch and click
+        confettiCannon.addEventListener('touchstart', triggerConfetti, { passive: false });
+        confettiCannon.addEventListener('click', triggerConfetti);
 
         function createMassiveFireworks() {
             const colors = ['#FFD700', '#FFA500', '#FF69B4', '#9333ea', '#60a5fa', '#10b981'];
