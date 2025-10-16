@@ -4,30 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grattis på 21-årsdagen! 🎉</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --gold: #FFD700;
+            --pink: #FF69B4;
+            --purple: #9333ea;
+            --dark: #0f0c29;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* Confetti Canvas */
-        #confetti-canvas {
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0f0c29;
+            min-height: 100vh;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.8);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            transition: all 0.1s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99998;
+            transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor.active {
+            transform: translate(-50%, -50%) scale(0.5);
+            background: rgba(255, 215, 0, 0.5);
+        }
+
+        .cursor-follower.active {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            animation: bgFloat 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-animation span:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bg-animation span:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .bg-animation span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-animation span:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .bg-animation span:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        .bg-animation span:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+        .bg-animation span:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+        .bg-animation span:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+        .bg-animation span:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+        @keyframes bgFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Particles Canvas */
+        #particles-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 1;
         }
 
         /* Hero Section */
@@ -40,208 +137,543 @@
             text-align: center;
             padding: 2rem;
             position: relative;
-            z-index: 1;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.85) 50%, rgba(36, 36, 62, 0.95) 100%);
         }
 
-        .title {
-            font-size: 3rem;
-            color: white;
-            margin-bottom: 2rem;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            animation: fadeInDown 1s ease-out;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+            z-index: -1;
         }
 
-        /* Animated 21 */
+        .header-text {
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: fadeInDown 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF69B4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            opacity: 0;
+            animation: lineGrow 1s ease-out 1s forwards;
+        }
+
+        @keyframes lineGrow {
+            to {
+                opacity: 1;
+                width: 100%;
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+        }
+
+        /* 3D Animated Number */
+        .number-container {
+            perspective: 1000px;
+            margin: 3rem 0;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.2s forwards;
+        }
+
         .big-number {
-            font-size: 15rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #FFD700, #FFA500, #FF69B4, #FFD700);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(10rem, 25vw, 20rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF69B4, #9333ea);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientShift 3s ease infinite, bounce 2s ease-in-out infinite;
+            animation: gradientFlow 4s ease infinite, float3D 6s ease-in-out infinite;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
             position: relative;
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.4));
+        }
+
+        .big-number::before {
+            content: '21';
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            transform: translateZ(-50px) scale(1.1);
+            filter: blur(20px);
         }
 
         .big-number:hover {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.1) rotateY(15deg) rotateX(10deg);
+            filter: drop-shadow(0 0 60px rgba(255, 215, 0, 0.6));
         }
 
-        /* Interactive Cards */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem;
-            z-index: 1;
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0px) rotateY(-5deg); }
+            50% { transform: translateY(-30px) rotateY(5deg); }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
             position: relative;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s ease-out;
-            animation-fill-mode: backwards;
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin-left: -3px;
+            background: white;
+            border-radius: 50%;
+            animation: scrollAnim 2s infinite;
         }
 
-        .card:nth-child(1) { animation-delay: 0.2s; }
-        .card:nth-child(2) { animation-delay: 0.4s; }
-        .card:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes scrollAnim {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.05);
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        /* Premium Cards Section */
+        .cards-section {
+            position: relative;
+            z-index: 10;
+            padding: 8rem 2rem;
+            background: linear-gradient(180deg, rgba(15, 12, 41, 0) 0%, rgba(15, 12, 41, 0.95) 10%, rgba(15, 12, 41, 0.95) 90%, rgba(15, 12, 41, 0) 100%);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.6) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .premium-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(80px);
+        }
+
+        .premium-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .premium-card:hover::before {
+            left: 100%;
+        }
+
+        .premium-card::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #FFD700, #FF69B4, #9333ea);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .premium-card:hover::after {
+            opacity: 1;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(147, 51, 234, 0.3);
         }
 
         .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 4rem;
+            margin-bottom: 2rem;
             display: inline-block;
-            animation: float 3s ease-in-out infinite;
+            animation: floatIcon 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(255, 215, 0, 0.3));
         }
 
-        .card:nth-child(2) .card-icon { animation-delay: 0.5s; }
-        .card:nth-child(3) .card-icon { animation-delay: 1s; }
+        .premium-card:nth-child(2) .card-icon { animation-delay: 0.5s; }
+        .premium-card:nth-child(3) .card-icon { animation-delay: 1s; }
 
-        .card h2 {
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
             color: white;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
         }
 
-        .card p {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
+        .card-text {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
             font-size: 1.1rem;
+            font-weight: 300;
         }
 
-        /* Interactive Balloons */
-        .balloons-container {
-            position: fixed;
+        /* Interactive Timeline */
+        .timeline-section {
+            position: relative;
+            z-index: 10;
+            padding: 8rem 2rem;
+            background: rgba(15, 12, 41, 0.95);
+        }
+
+        .timeline-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
             bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 5rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timeline-item:nth-child(even) {
+            transform: translateX(50px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: calc(50% - 40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-content:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .timeline-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Grand Finale Section */
+        .finale-section {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 12, 41, 0.98) 0%, rgba(48, 43, 99, 0.95) 50%, rgba(36, 36, 62, 0.98) 100%);
+        }
+
+        .finale-content {
+            max-width: 900px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .finale-content.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .finale-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FF69B4 50%, #9333ea 75%, #FFD700 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s ease infinite;
+            margin-bottom: 3rem;
+            filter: drop-shadow(0 10px 30px rgba(255, 215, 0, 0.3));
+        }
+
+        .finale-message {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            padding: 4rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .finale-message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .finale-text {
+            color: white;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            line-height: 2;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .finale-text strong {
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            margin-top: 3rem;
+        }
+
+        /* Floating Hearts */
+        .hearts-container {
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 5;
+            overflow: hidden;
         }
 
-        .balloon {
+        .heart {
             position: absolute;
-            bottom: -150px;
-            width: 80px;
-            height: 100px;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: floatUp 15s ease-in-out infinite;
-            pointer-events: all;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .balloon:hover {
-            transform: scale(1.2);
-        }
-
-        .balloon::after {
-            content: '';
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .balloon:nth-child(1) { left: 10%; background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%); animation-delay: 0s; animation-duration: 12s; }
-        .balloon:nth-child(2) { left: 25%; background: linear-gradient(135deg, #ffd93d 0%, #f6c23e 100%); animation-delay: 2s; animation-duration: 14s; }
-        .balloon:nth-child(3) { left: 40%; background: linear-gradient(135deg, #6bcf7f 0%, #4d96a9 100%); animation-delay: 4s; animation-duration: 16s; }
-        .balloon:nth-child(4) { left: 55%; background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); animation-delay: 6s; animation-duration: 13s; }
-        .balloon:nth-child(5) { left: 70%; background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%); animation-delay: 8s; animation-duration: 15s; }
-        .balloon:nth-child(6) { left: 85%; background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); animation-delay: 10s; animation-duration: 17s; }
-
-        /* Message Box */
-        .message-box {
-            max-width: 800px;
-            margin: 4rem auto;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            text-align: center;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            z-index: 1;
-            animation: fadeIn 2s ease-out 1s backwards;
-        }
-
-        .message-box h3 {
-            color: white;
             font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: heartFloat 8s ease-in-out infinite;
         }
 
-        .message-box p {
-            color: white;
-            font-size: 1.3rem;
-            line-height: 1.8;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        @keyframes heartFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(0deg) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg) scale(1);
+            }
         }
 
-        /* Sparkle Effect */
-        .sparkle {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkleAnim 1s ease-out forwards;
-            z-index: 10000;
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            
+            .cursor, .cursor-follower {
+                display: none;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+
+            .timeline-line {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-item {
+                transform: translateX(0) !important;
+            }
+
+            .finale-message {
+                padding: 2rem;
+            }
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem;
-            color: white;
-            font-size: 1.2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Animations */
+        /* Utility Animations */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(-50px);
             }
             to {
                 opacity: 1;
@@ -253,257 +685,416 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
-        @keyframes floatUp {
-            0% {
-                bottom: -150px;
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                bottom: 110vh;
-                opacity: 0;
-            }
-        }
-
-        @keyframes sparkleAnim {
-            0% {
-                opacity: 1;
-                transform: scale(0) rotate(0deg);
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.5) rotate(180deg);
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .title { font-size: 2rem; }
-            .big-number { font-size: 8rem; }
-            .card h2 { font-size: 1.3rem; }
-            .card p { font-size: 1rem; }
-            .message-box h3 { font-size: 1.5rem; }
-            .message-box p { font-size: 1.1rem; }
-        }
     </style>
 </head>
 <body>
-    <!-- Confetti Canvas -->
-    <canvas id="confetti-canvas"></canvas>
+    <!-- Custom Cursors -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-    <!-- Balloons -->
-    <div class="balloons-container">
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
-        <div class="balloon"></div>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
+
+    <!-- Particles Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Hearts Container -->
+    <div class="hearts-container" id="hearts-container"></div>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1 class="title">✨ Grattis på födelsedagen! ✨</h1>
-        <div class="big-number" id="bigNumber">21</div>
+        <div class="header-text">
+            <h1>✨ Grattis på Födelsedagen ✨</h1>
+            <p class="subtitle">EN MAGISK DAG</p>
+        </div>
+        
+        <div class="number-container">
+            <div class="big-number" id="bigNumber">21</div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
     </section>
 
-    <!-- Interactive Cards -->
-    <div class="cards-container">
-        <div class="card" onclick="celebrate()">
-            <div class="card-icon">🎉</div>
-            <h2>21 År!</h2>
-            <p>Äntligen är du 21! En helt ny värld av möjligheter öppnar sig. Dags att fira denna otroliga milstolpe!</p>
+    <!-- Premium Cards Section -->
+    <section class="cards-section">
+        <h2 class="section-title" data-scroll>Tre Önskningar</h2>
+        <div class="cards-grid">
+            <div class="premium-card" data-scroll>
+                <div class="card-icon">🎉</div>
+                <h3 class="card-title">21 År av Magi</h3>
+                <p class="card-text">Äntligen 21! En helt ny värld av möjligheter öppnar sig framför dig. Detta är början på något extraordinärt - ett kapitel fyllt av äventyr, drömmar och oändliga möjligheter.</p>
+            </div>
+            <div class="premium-card" data-scroll>
+                <div class="card-icon">💖</div>
+                <h3 class="card-title">Världens Bästa Syster</h3>
+                <p class="card-text">Du är inte bara en fantastisk syster - du är en inspirerande, stark och underbar människa som gör världen bättre varje dag. Din närvaro lyser upp allt omkring dig.</p>
+            </div>
+            <div class="premium-card" data-scroll>
+                <div class="card-icon">🌟</div>
+                <h3 class="card-title">Framtiden Väntar</h3>
+                <p class="card-text">Framtiden tillhör dig! Må detta år vara fyllt med spännande äventyr, oväntade glädjeämnen, och all den kärlek och lycka du så väl förtjänar.</p>
+            </div>
         </div>
-        <div class="card" onclick="celebrate()">
-            <div class="card-icon">💖</div>
-            <h2>Bästa Systern</h2>
-            <p>Du är inte bara en fantastisk syster, du är också en underbar människa som förtjänar all lycka i världen!</p>
-        </div>
-        <div class="card" onclick="celebrate()">
-            <div class="card-icon">🌟</div>
-            <h2>Framtiden Är Din</h2>
-            <p>Må detta år vara fyllt av äventyr, skratt, kärlek och all den lycka du förtjänar. Du har hela livet framför dig!</p>
-        </div>
-    </div>
+    </section>
 
-    <!-- Message Box -->
-    <div class="message-box">
-        <h3>💝 Ett Speciellt Meddelande 💝</h3>
-        <p>
-            Idag firar vi inte bara att du fyller 21, vi firar DIG! 
-            Din glädje, din styrka och allt det fantastiska du är. 
-            Här är till nya äventyr, oförglömliga minnen och ett år fyllt av magi!
-        </p>
-        <p style="margin-top: 1.5rem; font-size: 1.5rem;">
-            🎂 Ha en fantastisk dag! 🎂
-        </p>
-    </div>
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <h2 class="section-title" data-scroll>Resa Till 21</h2>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item" data-scroll>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2004</div>
+                    <p class="timeline-text">En stjärna föddes och världen blev lite ljusare ✨</p>
+                </div>
+            </div>
 
-    <footer>
-        <p>Med all kärlek 💕</p>
-    </footer>
+            <div class="timeline-item" data-scroll>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">Genom Åren</div>
+                    <p class="timeline-text">21 år av skratt, äventyr, och oförglömliga minnen som format dig till den fantastiska person du är idag 🎈</p>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-scroll>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2025</div>
+                    <p class="timeline-text">Ett nytt kapitel börjar - fyllt med oändliga möjligheter och drömmar som väntar på att bli verklighet 🌟</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grand Finale Section -->
+    <section class="finale-section">
+        <div class="finale-content" data-scroll>
+            <h2 class="finale-title">Grattis på 21-årsdagen!</h2>
+            <div class="finale-message">
+                <p class="finale-text">
+                    Idag firar vi inte bara att du fyller 21 år - vi firar <strong>DIG</strong>!
+                    Din glädje, din styrka, din vänlighet och allt det underbara som gör dig till den du är.
+                    <br><br>
+                    Må detta år vara det bästa hittills, fyllt med <strong>magiska ögonblick</strong>, 
+                    <strong>oförglömliga äventyr</strong> och all den <strong>lycka</strong> och <strong>kärlek</strong> du förtjänar.
+                    <br><br>
+                    Du har hela livet framför dig, och jag kan inte vänta med att se alla fantastiska saker du kommer att åstadkomma! 🎂✨
+                </p>
+            </div>
+            <p class="signature">Med all kärlek i världen 💕</p>
+        </div>
+    </section>
 
     <script>
-        // Confetti Animation
-        const canvas = document.getElementById('confetti-canvas');
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Smooth cursor follower
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+            requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+
+        // Cursor interactions
+        const interactiveElements = document.querySelectorAll('a, button, .premium-card, .big-number, .timeline-content');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('active');
+                cursorFollower.classList.add('active');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('active');
+                cursorFollower.classList.remove('active');
+            });
+        });
+
+        // Particles Canvas
+        const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const confettiPieces = [];
-        const confettiCount = 150;
-        const colors = ['#ff6b9d', '#ffd93d', '#6bcf7f', '#a78bfa', '#fb7185', '#60a5fa', '#FFD700'];
+        const particles = [];
+        const particleCount = 80;
 
-        class Confetti {
+        class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 8 + 4;
-                this.speedY = Math.random() * 3 + 2;
-                this.speedX = Math.random() * 2 - 1;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.rotation = Math.random() * 360;
-                this.rotationSpeed = Math.random() * 10 - 5;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(${Math.random() > 0.5 ? '255, 215, 0' : '147, 51, 234'}, ${Math.random() * 0.5 + 0.2})`;
             }
 
             update() {
-                this.y += this.speedY;
                 this.x += this.speedX;
-                this.rotation += this.rotationSpeed;
+                this.y += this.speedY;
 
-                if (this.y > canvas.height) {
-                    this.y = -10;
-                    this.x = Math.random() * canvas.width;
-                }
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
             }
 
             draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate((this.rotation * Math.PI) / 180);
                 ctx.fillStyle = this.color;
-                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-                ctx.restore();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        function initConfetti() {
-            for (let i = 0; i < confettiCount; i++) {
-                confettiPieces.push(new Confetti());
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
             }
         }
 
-        function animateConfetti() {
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${0.2 * (1 - distance / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            confettiPieces.forEach(piece => {
-                piece.update();
-                piece.draw();
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
             });
-            requestAnimationFrame(animateConfetti);
+            connectParticles();
+            requestAnimationFrame(animateParticles);
         }
 
-        initConfetti();
-        animateConfetti();
+        initParticles();
+        animateParticles();
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
 
-        // Interactive Big Number
+        // Big Number Interaction
         const bigNumber = document.getElementById('bigNumber');
         bigNumber.addEventListener('click', () => {
-            celebrate();
-            bigNumber.style.animation = 'none';
-            setTimeout(() => {
-                bigNumber.style.animation = 'gradientShift 3s ease infinite, bounce 2s ease-in-out infinite';
-            }, 10);
+            createFireworks();
+            spawnHearts(20);
         });
 
-        // Balloon Pop Effect
-        const balloons = document.querySelectorAll('.balloon');
-        balloons.forEach(balloon => {
-            balloon.addEventListener('click', (e) => {
-                createSparkles(e.clientX, e.clientY);
-                balloon.style.animation = 'none';
-                balloon.style.opacity = '0';
-                setTimeout(() => {
-                    balloon.style.animation = '';
-                    balloon.style.opacity = '1';
-                }, 15000);
-            });
-        });
-
-        // Sparkle Effect
-        function createSparkles(x, y) {
-            for (let i = 0; i < 15; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = x + (Math.random() * 40 - 20) + 'px';
-                sparkle.style.top = y + (Math.random() * 40 - 20) + 'px';
-                sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                document.body.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 1000);
-            }
-        }
-
-        // Celebration Function
-        function celebrate() {
-            // Add more confetti temporarily
-            const tempConfetti = [];
+        // Fireworks Effect
+        function createFireworks() {
+            const colors = ['#FFD700', '#FFA500', '#FF69B4', '#9333ea', '#60a5fa'];
             for (let i = 0; i < 50; i++) {
-                tempConfetti.push(new Confetti());
-            }
-            confettiPieces.push(...tempConfetti);
-            
-            // Remove extra confetti after 3 seconds
-            setTimeout(() => {
-                confettiPieces.splice(confettiCount, 50);
-            }, 3000);
+                const firework = document.createElement('div');
+                firework.style.position = 'fixed';
+                firework.style.left = '50%';
+                firework.style.top = '50%';
+                firework.style.width = '4px';
+                firework.style.height = '4px';
+                firework.style.borderRadius = '50%';
+                firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.pointerEvents = 'none';
+                firework.style.zIndex = '10000';
+                document.body.appendChild(firework);
 
-            // Play a little animation
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.transform = 'scale(1.1) rotate(5deg)';
-                    setTimeout(() => {
-                        card.style.transform = '';
-                    }, 300);
-                }, index * 100);
-            });
+                const angle = (Math.PI * 2 * i) / 50;
+                const velocity = 5 + Math.random() * 5;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                animateFirework(firework, vx, vy);
+            }
         }
 
-        // Mouse trail sparkles
-        let sparkleTimeout;
-        document.addEventListener('mousemove', (e) => {
-            clearTimeout(sparkleTimeout);
-            sparkleTimeout = setTimeout(() => {
-                if (Math.random() > 0.7) {
-                    createSparkles(e.clientX, e.clientY);
+        function animateFirework(element, vx, vy) {
+            let x = window.innerWidth / 2;
+            let y = window.innerHeight / 2;
+            let opacity = 1;
+
+            function update() {
+                x += vx;
+                y += vy;
+                opacity -= 0.015;
+                element.style.left = x + 'px';
+                element.style.top = y + 'px';
+                element.style.opacity = opacity;
+
+                if (opacity > 0) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.remove();
                 }
-            }, 50);
+            }
+            update();
+        }
+
+        // Floating Hearts
+        function spawnHearts(count) {
+            const heartsContainer = document.getElementById('hearts-container');
+            const hearts = ['💖', '💕', '💗', '💝', '💘', '✨', '🌟', '⭐'];
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.animationDuration = (5 + Math.random() * 3) + 's';
+                    heartsContainer.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 8000);
+                }, i * 100);
+            }
+        }
+
+        // Continuous hearts
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                spawnHearts(1);
+            }
+        }, 2000);
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('[data-scroll]').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Card Interactions
+        const cards = document.querySelectorAll('.premium-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                createSparkles(card);
+                spawnHearts(5);
+            });
+        });
+
+        function createSparkles(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                sparkle.style.width = '6px';
+                sparkle.style.height = '6px';
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.background = '#FFD700';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '10000';
+                document.body.appendChild(sparkle);
+
+                const angle = (Math.PI * 2 * i) / 20;
+                const velocity = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                animateSparkle(sparkle, vx, vy, x, y);
+            }
+        }
+
+        function animateSparkle(element, vx, vy, startX, startY) {
+            let x = startX;
+            let y = startY;
+            let opacity = 1;
+
+            function update() {
+                x += vx;
+                y += vy;
+                opacity -= 0.02;
+                element.style.left = x + 'px';
+                element.style.top = y + 'px';
+                element.style.opacity = opacity;
+
+                if (opacity > 0) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.remove();
+                }
+            }
+            update();
+        }
+
+        // Timeline Interactions
+        const timelineItems = document.querySelectorAll('.timeline-content');
+        timelineItems.forEach(item => {
+            item.addEventListener('click', () => {
+                createSparkles(item);
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
     </script>
 </body>
