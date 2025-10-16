@@ -40,36 +40,38 @@
         .cursor {
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255, 215, 0, 0.8);
+            border: 2px solid rgba(255, 215, 0, 0.9);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 99999;
-            transition: all 0.1s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+            will-change: transform;
             mix-blend-mode: difference;
         }
 
         .cursor-follower {
             width: 40px;
             height: 40px;
-            border: 1px solid rgba(255, 215, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.5);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 99998;
-            transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+            will-change: transform;
             mix-blend-mode: difference;
         }
 
         .cursor.active {
-            transform: translate(-50%, -50%) scale(0.5);
-            background: rgba(255, 215, 0, 0.5);
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 215, 0, 0.6);
         }
 
         .cursor-follower.active {
-            transform: translate(-50%, -50%) scale(1.5);
+            width: 60px;
+            height: 60px;
         }
 
         /* Animated Background */
@@ -632,6 +634,204 @@
             }
         }
 
+        /* Touch Ripple Effect */
+        #touch-ripple-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+        }
+
+        .touch-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleExpand 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes rippleExpand {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Confetti Cannon Button */
+        .confetti-cannon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10000;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+        }
+
+        .confetti-cannon:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        .confetti-cannon:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Music Toggle Button */
+        .music-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .music-toggle.playing {
+            animation: musicPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Easter Egg Hint */
+        .easter-egg-hint {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 0.9rem;
+            z-index: 10000;
+            opacity: 0;
+            animation: hintFade 10s ease-in-out 3s;
+            pointer-events: none;
+        }
+
+        @keyframes hintFade {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        .desktop-hint {
+            display: none;
+        }
+
+        .mobile-hint {
+            display: inline;
+        }
+
+        /* Shake Animation (for shake detection) */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Tilt Effect for Cards (Gyroscope) */
+        .premium-card.tilt {
+            transform: translateY(-20px) scale(1.02);
+        }
+
+        /* Secret Message */
+        .secret-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, rgba(15, 12, 41, 0.98), rgba(48, 43, 99, 0.95));
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 215, 0, 0.5);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 500px;
+            z-index: 100000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .secret-message.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .secret-message h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .secret-message p {
+            color: white;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .secret-message button {
+            display: block;
+            margin: 2rem auto 0;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #FFD700, #FF69B4);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secret-message button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             body {
@@ -665,6 +865,33 @@
             }
 
             .finale-message {
+                padding: 2rem;
+            }
+
+            .confetti-cannon {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .music-toggle {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                left: 20px;
+            }
+
+            .desktop-hint {
+                display: inline;
+            }
+
+            .mobile-hint {
+                display: none;
+            }
+
+            .secret-message {
+                max-width: 90%;
                 padding: 2rem;
             }
         }
@@ -711,6 +938,24 @@
 
     <!-- Hearts Container -->
     <div class="hearts-container" id="hearts-container"></div>
+
+    <!-- Mobile Touch Ripple -->
+    <div id="touch-ripple-container"></div>
+
+    <!-- Confetti Cannon Button (Mobile/Desktop) -->
+    <button class="confetti-cannon" id="confetti-cannon" aria-label="Launch confetti">
+        🎉
+    </button>
+
+    <!-- Music Control -->
+    <button class="music-toggle" id="music-toggle" aria-label="Toggle music">
+        🎵
+    </button>
+
+    <!-- Easter Egg Hint -->
+    <div class="easter-egg-hint" id="easter-egg-hint">
+        💡 Prova att <span class="desktop-hint">skaka på telefonen</span><span class="mobile-hint">trycka 3 gånger på 21</span>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -802,25 +1047,25 @@
     </section>
 
     <script>
-        // Custom Cursor
+        // Custom Cursor - Optimized for performance
         const cursor = document.querySelector('.cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
         let mouseX = 0, mouseY = 0;
         let followerX = 0, followerY = 0;
 
+        // Instant cursor position
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
+            cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
         });
 
-        // Smooth cursor follower
+        // Smooth follower with better easing
         function animateFollower() {
-            followerX += (mouseX - followerX) * 0.1;
-            followerY += (mouseY - followerY) * 0.1;
-            cursorFollower.style.left = followerX + 'px';
-            cursorFollower.style.top = followerY + 'px';
+            const ease = 0.15; // Increased from 0.1 for faster following
+            followerX += (mouseX - followerX) * ease;
+            followerY += (mouseY - followerY) * ease;
+            cursorFollower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
             requestAnimationFrame(animateFollower);
         }
         animateFollower();
@@ -927,49 +1172,7 @@
 
         // Fireworks Effect
         function createFireworks() {
-            const colors = ['#FFD700', '#FFA500', '#FF69B4', '#9333ea', '#60a5fa'];
-            for (let i = 0; i < 50; i++) {
-                const firework = document.createElement('div');
-                firework.style.position = 'fixed';
-                firework.style.left = '50%';
-                firework.style.top = '50%';
-                firework.style.width = '4px';
-                firework.style.height = '4px';
-                firework.style.borderRadius = '50%';
-                firework.style.background = colors[Math.floor(Math.random() * colors.length)];
-                firework.style.pointerEvents = 'none';
-                firework.style.zIndex = '10000';
-                document.body.appendChild(firework);
-
-                const angle = (Math.PI * 2 * i) / 50;
-                const velocity = 5 + Math.random() * 5;
-                const vx = Math.cos(angle) * velocity;
-                const vy = Math.sin(angle) * velocity;
-
-                animateFirework(firework, vx, vy);
-            }
-        }
-
-        function animateFirework(element, vx, vy) {
-            let x = window.innerWidth / 2;
-            let y = window.innerHeight / 2;
-            let opacity = 1;
-
-            function update() {
-                x += vx;
-                y += vy;
-                opacity -= 0.015;
-                element.style.left = x + 'px';
-                element.style.top = y + 'px';
-                element.style.opacity = opacity;
-
-                if (opacity > 0) {
-                    requestAnimationFrame(update);
-                } else {
-                    element.remove();
-                }
-            }
-            update();
+            createMassiveFireworks();
         }
 
         // Floating Hearts
@@ -1096,6 +1299,391 @@
                 }
             });
         });
+
+        // ============================================
+        // MOBILE-FIRST PREMIUM FEATURES
+        // ============================================
+
+        // Touch Ripple Effect
+        const touchRippleContainer = document.getElementById('touch-ripple-container');
+        
+        function createTouchRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.className = 'touch-ripple';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.width = '100px';
+            ripple.style.height = '100px';
+            touchRippleContainer.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        document.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            createTouchRipple(touch.clientX, touch.clientY);
+        });
+
+        // Haptic Feedback (iOS/Android)
+        function vibrate(pattern = 10) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        // Confetti Cannon Button
+        const confettiCannon = document.getElementById('confetti-cannon');
+        confettiCannon.addEventListener('click', () => {
+            vibrate([20, 10, 20]);
+            createMassiveFireworks();
+            spawnHearts(30);
+            confettiCannon.style.animation = 'none';
+            setTimeout(() => {
+                confettiCannon.style.animation = 'pulse 2s ease-in-out infinite';
+            }, 100);
+        });
+
+        function createMassiveFireworks() {
+            const colors = ['#FFD700', '#FFA500', '#FF69B4', '#9333ea', '#60a5fa', '#10b981'];
+            const positions = [
+                { x: 0.2, y: 0.3 },
+                { x: 0.5, y: 0.2 },
+                { x: 0.8, y: 0.3 },
+                { x: 0.3, y: 0.6 },
+                { x: 0.7, y: 0.6 }
+            ];
+
+            positions.forEach((pos, index) => {
+                setTimeout(() => {
+                    const startX = window.innerWidth * pos.x;
+                    const startY = window.innerHeight * pos.y;
+                    
+                    for (let i = 0; i < 40; i++) {
+                        const firework = document.createElement('div');
+                        firework.style.position = 'fixed';
+                        firework.style.left = startX + 'px';
+                        firework.style.top = startY + 'px';
+                        firework.style.width = '6px';
+                        firework.style.height = '6px';
+                        firework.style.borderRadius = '50%';
+                        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        firework.style.pointerEvents = 'none';
+                        firework.style.zIndex = '10000';
+                        firework.style.boxShadow = `0 0 10px ${colors[Math.floor(Math.random() * colors.length)]}`;
+                        document.body.appendChild(firework);
+
+                        const angle = (Math.PI * 2 * i) / 40;
+                        const velocity = 4 + Math.random() * 6;
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity;
+
+                        animateFirework(firework, vx, vy, startX, startY);
+                    }
+                }, index * 200);
+            });
+        }
+
+        function animateFirework(element, vx, vy, startX, startY) {
+            let x = startX;
+            let y = startY;
+            let opacity = 1;
+            let vy_current = vy;
+
+            function update() {
+                x += vx;
+                y += vy_current;
+                vy_current += 0.2; // Gravity
+                opacity -= 0.012;
+                element.style.left = x + 'px';
+                element.style.top = y + 'px';
+                element.style.opacity = opacity;
+
+                if (opacity > 0) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.remove();
+                }
+            }
+            update();
+        }
+
+        // Music Control (Web Audio API - Birthday Tune)
+        const musicToggle = document.getElementById('music-toggle');
+        let audioContext;
+        let isPlaying = false;
+
+        musicToggle.addEventListener('click', () => {
+            vibrate(15);
+            if (!isPlaying) {
+                playBirthdayMelody();
+                musicToggle.classList.add('playing');
+                musicToggle.textContent = '🎵';
+                isPlaying = true;
+            } else {
+                if (audioContext) {
+                    audioContext.close();
+                }
+                musicToggle.classList.remove('playing');
+                musicToggle.textContent = '🎵';
+                isPlaying = false;
+            }
+        });
+
+        function playBirthdayMelody() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const melody = [
+                { note: 262, duration: 0.4 }, // C
+                { note: 262, duration: 0.4 }, // C
+                { note: 294, duration: 0.8 }, // D
+                { note: 262, duration: 0.8 }, // C
+                { note: 349, duration: 0.8 }, // F
+                { note: 330, duration: 1.6 }, // E
+            ];
+
+            let time = audioContext.currentTime;
+            melody.forEach(({ note, duration }) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = note;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, time);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
+                
+                oscillator.start(time);
+                oscillator.stop(time + duration);
+                
+                time += duration;
+            });
+        }
+
+        // Device Orientation (Gyroscope) - Mobile Only
+        let isGyroActive = false;
+        
+        if (window.DeviceOrientationEvent) {
+            // iOS 13+ requires permission
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                bigNumber.addEventListener('click', () => {
+                    DeviceOrientationEvent.requestPermission()
+                        .then(response => {
+                            if (response === 'granted') {
+                                enableGyroscope();
+                            }
+                        })
+                        .catch(console.error);
+                });
+            } else {
+                // Non-iOS or older iOS
+                enableGyroscope();
+            }
+        }
+
+        function enableGyroscope() {
+            if (isGyroActive) return;
+            isGyroActive = true;
+
+            window.addEventListener('deviceorientation', (event) => {
+                const tilt = event.beta; // Front-to-back tilt (-180 to 180)
+                const turn = event.gamma; // Left-to-right tilt (-90 to 90)
+                
+                // Apply subtle parallax to background elements
+                const bgAnimation = document.querySelector('.bg-animation');
+                if (bgAnimation) {
+                    bgAnimation.style.transform = `translate(${turn * 0.5}px, ${tilt * 0.5}px)`;
+                }
+
+                // Tilt cards based on device orientation
+                const premiumCards = document.querySelectorAll('.premium-card');
+                premiumCards.forEach(card => {
+                    card.style.transform = `rotateY(${turn * 0.3}deg) rotateX(${tilt * 0.3}deg)`;
+                });
+            });
+        }
+
+        // Shake Detection (Mobile)
+        let lastX = 0, lastY = 0, lastZ = 0;
+        let shakeCount = 0;
+
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', (event) => {
+                const acceleration = event.accelerationIncludingGravity;
+                const x = acceleration.x || 0;
+                const y = acceleration.y || 0;
+                const z = acceleration.z || 0;
+
+                const deltaX = Math.abs(x - lastX);
+                const deltaY = Math.abs(y - lastY);
+                const deltaZ = Math.abs(z - lastZ);
+
+                if (deltaX + deltaY + deltaZ > 30) {
+                    shakeCount++;
+                    if (shakeCount > 3) {
+                        onShakeDetected();
+                        shakeCount = 0;
+                    }
+                }
+
+                lastX = x;
+                lastY = y;
+                lastZ = z;
+            });
+        }
+
+        function onShakeDetected() {
+            vibrate([30, 50, 30, 50, 30]);
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
+            createMassiveFireworks();
+            spawnHearts(50);
+            showSecretMessage();
+        }
+
+        // Secret Easter Egg - Triple Click on "21"
+        let clickCount = 0;
+        let clickTimer;
+
+        bigNumber.addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            
+            if (clickCount === 3) {
+                vibrate([10, 20, 10, 20, 10]);
+                showSecretMessage();
+                clickCount = 0;
+            } else {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 1000);
+            }
+        });
+
+        // Secret Message Display
+        function showSecretMessage() {
+            const existingMessage = document.querySelector('.secret-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const message = document.createElement('div');
+            message.className = 'secret-message';
+            message.innerHTML = `
+                <h3>🎊 Hemligt Meddelande! 🎊</h3>
+                <p>
+                    Du hittade det hemliga meddelandet! 🎉<br><br>
+                    Du är inte bara 21 år gammal idag - du är 21 år fantastisk, 
+                    21 år älskad, och 21 år av ren glädje för alla omkring dig!
+                    <br><br>
+                    Detta år kommer bli det bästa hittills! 💖✨
+                </p>
+                <button onclick="this.parentElement.remove()">Stäng 💕</button>
+            `;
+            document.body.appendChild(message);
+            setTimeout(() => message.classList.add('show'), 100);
+            spawnHearts(20);
+        }
+
+        // Swipe Gesture Detection (Mobile)
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Swipe up detection
+            if (deltaY < -100 && Math.abs(deltaX) < 50) {
+                vibrate(20);
+                spawnHearts(10);
+            }
+            
+            // Swipe down detection (pull down for confetti)
+            if (deltaY > 100 && Math.abs(deltaX) < 50 && window.scrollY < 50) {
+                vibrate([15, 10, 15]);
+                createMassiveFireworks();
+                spawnHearts(15);
+            }
+        });
+
+        // Long Press Detection on Cards
+        const premiumCards = document.querySelectorAll('.premium-card');
+        premiumCards.forEach(card => {
+            let pressTimer;
+            
+            card.addEventListener('touchstart', (e) => {
+                pressTimer = setTimeout(() => {
+                    vibrate(50);
+                    card.classList.add('shake');
+                    setTimeout(() => card.classList.remove('shake'), 500);
+                    createSparkles(card);
+                    spawnHearts(8);
+                }, 500);
+            });
+            
+            card.addEventListener('touchend', () => {
+                clearTimeout(pressTimer);
+            });
+            
+            card.addEventListener('touchmove', () => {
+                clearTimeout(pressTimer);
+            });
+        });
+
+        // Auto-play hearts periodically
+        setInterval(() => {
+            if (Math.random() > 0.6) {
+                spawnHearts(2);
+            }
+        }, 3000);
+
+        // Welcome Animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                spawnHearts(15);
+            }, 1500);
+        });
+
+        // Performance: Reduce animations when battery is low (if supported)
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(battery => {
+                if (battery.level < 0.2) {
+                    // Reduce particle count on low battery
+                    particles.splice(particleCount / 2);
+                }
+            });
+        }
+
+        // Add share functionality (if supported)
+        if (navigator.share) {
+            const shareButton = document.createElement('button');
+            shareButton.className = 'music-toggle';
+            shareButton.style.bottom = '110px';
+            shareButton.textContent = '📤';
+            shareButton.setAttribute('aria-label', 'Share');
+            shareButton.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: 'Grattis på 21-årsdagen!',
+                        text: 'Kolla in denna fantastiska födelsedagssida! 🎉',
+                        url: window.location.href
+                    });
+                    vibrate(15);
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            });
+            document.body.appendChild(shareButton);
+        }
     </script>
 </body>
 </html>
