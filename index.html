@@ -162,7 +162,7 @@
 
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-size: clamp(1.8rem, 6vw, 5rem);
             font-weight: 900;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF69B4 100%);
             -webkit-background-clip: text;
@@ -195,7 +195,7 @@
         }
 
         .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-size: clamp(0.8rem, 2vw, 1.5rem);
             color: rgba(255, 255, 255, 0.8);
             font-weight: 300;
             letter-spacing: 4px;
@@ -214,7 +214,7 @@
 
         .big-number {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(10rem, 25vw, 20rem);
+            font-size: clamp(6rem, 20vw, 20rem);
             font-weight: 900;
             background: linear-gradient(135deg, #FFD700, #FFA500, #FF69B4, #9333ea);
             background-size: 300% 300%;
@@ -305,7 +305,7 @@
 
         .section-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(1.8rem, 5vw, 4rem);
             text-align: center;
             background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.6) 100%);
             -webkit-background-clip: text;
@@ -736,7 +736,7 @@
 
         .finale-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 7vw, 5rem);
+            font-size: clamp(2rem, 6vw, 5rem);
             font-weight: 900;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FF69B4 50%, #9333ea 75%, #FFD700 100%);
             background-size: 200% 200%;
@@ -776,7 +776,7 @@
 
         .finale-text {
             color: white;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-size: clamp(0.95rem, 2.2vw, 1.8rem);
             line-height: 2;
             font-weight: 300;
             position: relative;
@@ -879,9 +879,97 @@
                 display: none;
             }
 
+            /* Hero Section Mobile */
+            .hero {
+                padding: 1.5rem 1rem;
+                min-height: 100vh;
+            }
+
+            .title {
+                font-size: 2rem !important;
+                margin-bottom: 1rem;
+            }
+
+            .subtitle {
+                font-size: 0.85rem !important;
+                letter-spacing: 2px;
+                margin-bottom: 2rem;
+            }
+
+            .big-number {
+                font-size: 8rem !important;
+                margin: 1rem 0;
+            }
+
+            .scroll-indicator {
+                bottom: 20px;
+            }
+
+            /* Cards Mobile */
+            .cards-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem !important;
+                margin-bottom: 2.5rem;
+            }
+
             .cards-grid {
                 grid-template-columns: 1fr;
-                padding: 0 1rem;
+                gap: 1.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .premium-card {
+                padding: 1.8rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem !important;
+                margin-bottom: 0.8rem;
+            }
+
+            .card-text {
+                font-size: 0.95rem !important;
+                line-height: 1.6;
+            }
+
+            /* Photo Section Mobile */
+            .photo-gallery-section {
+                padding: 3rem 1rem;
+            }
+
+            .polaroid-container {
+                height: auto;
+                padding: 1rem 0.5rem;
+                max-width: 100%;
+            }
+
+            .polaroid-card {
+                padding: 12px;
+                padding-bottom: 50px;
+            }
+
+            .polaroid-caption p {
+                font-size: 1.2rem;
+                margin-top: 10px;
+            }
+
+            .photo-modal-close {
+                top: 20px;
+                right: 20px;
+            }
+
+            /* Timeline Mobile */
+            .timeline-section {
+                padding: 3rem 1rem;
             }
 
             .timeline-line {
@@ -891,6 +979,7 @@
             .timeline-content {
                 width: calc(100% - 60px);
                 margin-left: 60px !important;
+                padding: 1.5rem;
             }
 
             .timeline-dot {
@@ -899,36 +988,110 @@
 
             .timeline-item {
                 transform: translateX(0) !important;
+                margin-bottom: 3rem;
+            }
+
+            .timeline-year {
+                font-size: 2rem !important;
+                margin-bottom: 0.8rem;
+            }
+
+            .timeline-text {
+                font-size: 0.95rem !important;
+                line-height: 1.5;
+            }
+
+            /* Finale Section Mobile */
+            .finale-section {
+                padding: 3rem 1rem;
+            }
+
+            .finale-title {
+                font-size: 2.2rem !important;
+                margin-bottom: 2rem;
             }
 
             .finale-message {
-                padding: 2rem;
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
             }
 
+            .finale-text {
+                font-size: 1rem !important;
+                line-height: 1.7;
+            }
+
+            .signature {
+                font-size: 1.3rem;
+                margin-top: 2rem;
+            }
+
+            /* Confetti Button Mobile */
             .confetti-cannon {
-                width: 60px;
-                height: 60px;
-                bottom: 20px;
-                right: 20px;
+                width: 55px;
+                height: 55px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.6rem;
             }
 
-            .polaroid-container {
-                height: auto;
+            /* Footer Mobile */
+            footer {
                 padding: 2rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Extra Small Mobile (iPhone SE, etc) */
+        @media (max-width: 400px) {
+            .title {
+                font-size: 1.6rem !important;
             }
 
-            .polaroid-card {
-                padding: 15px;
-                padding-bottom: 60px;
+            .big-number {
+                font-size: 6rem !important;
+            }
+
+            .section-title {
+                font-size: 1.6rem !important;
+            }
+
+            .premium-card {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem !important;
+            }
+
+            .card-text {
+                font-size: 0.9rem !important;
+            }
+
+            .timeline-year {
+                font-size: 1.6rem !important;
+            }
+
+            .timeline-text {
+                font-size: 0.9rem !important;
+            }
+
+            .finale-title {
+                font-size: 1.8rem !important;
+            }
+
+            .finale-text {
+                font-size: 0.95rem !important;
             }
 
             .polaroid-caption p {
-                font-size: 1.4rem;
+                font-size: 1.1rem;
             }
 
-            .photo-modal-close {
-                top: 20px;
-                right: 20px;
+            .confetti-cannon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.4rem;
             }
         }
 
